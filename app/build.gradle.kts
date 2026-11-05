@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "com.lublo.agent"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.lublo.agent"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        targetSdk = 35
+        versionCode = 2
+        versionName = "0.2.0"
     }
 
     buildTypes {
@@ -44,4 +44,7 @@ android {
 }
 
 // Zero third-party dependencies on purpose: smallest possible APK.
-dependencies {}
+// Play Services (optional, for better TTS quality) — commented by default to keep size tiny.
+dependencies {
+    implementation("com.google.android.gms:play-services-tts:2.0.9")
+}

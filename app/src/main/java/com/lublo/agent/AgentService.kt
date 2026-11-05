@@ -27,6 +27,7 @@ class AgentService : AccessibilityService() {
     private lateinit var voice: Voice
     private lateinit var overlay: Overlay
     val agent by lazy { Agent(this) }
+    private val taskQueue = TaskQueue(this)
     private val waiters = CopyOnWriteArrayList<CountDownLatch>()
     private val keysDown = HashSet<Int>()
     private var combo = false
@@ -44,6 +45,7 @@ class AgentService : AccessibilityService() {
     override fun onUnbind(intent: Intent?): Boolean {
         instance = null
         agent.cancel()
+        taskQueue.shutdown()
         main.post {
             voice.destroy()
             overlay.hide()
@@ -99,6 +101,19 @@ class AgentService : AccessibilityService() {
         main.post { overlay.setRunning(true) }
         status("Task: $task")
         agent.start(task)
+    }
+
+    /** Run a task autonomously in the background while the agent stays available. */
+    fun runInBackground(task: String) {
+        if (Prefs.apiKey(this).isBlank()) {
+            taskQueue.enqueue { say("Please set your API key in the Lublo app first.") }
+            return
+        }
+        taskQueue.enqueue {
+            svc.status("Background task: $task")
+            agent.start(task)
+        }
+        main.post { status("Working in the background...") }
     }
 
     fun stopAll() {

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Deep space background -->
+    <color name="background">#0F0F13</color>
+    <color name="surface">#16161C</color>
+
+    <!-- Primary gradient colors (Jervis-like purple/blue) -->
+    <color name="primary">#6C63FF</color>
+    <color name="primaryDark">#4B45C9</color>
+    <color name="primaryLight">#8E87FF</color>
+
+    <!-- Accent gradient (cyan/pink for AI feel) -->
+    <color name="accent">#00D2FF</color>
+    <color name="accentDark">#0099CC</color>
+    <color name="accentPink">#FF6B9D</color>
+
+    <!-- Glassmorphism -->
+    <color name="glass">#33FFFFFF</color>
+    <color name="glassBorder">#4DFFFFFF</color>
+
+    <!-- Text colors -->
+    <color name="textPrimary">#FFFFFFFF</color>
+    <color name="textSecondary">#B0B3C7</color>
+    <color name="textMuted">#6F738A</color>
+
+    <!-- Status colors -->
+    <color name="success">#2ECC71</color>
+    <color name="warning">#F1C40F</color>
+    <color name="error">#E74C3C</color>
+    <color name="info">#3498DB</color>
+
+    <!-- Message bubbles -->
+    <color name="bubbleUser">#6C63FF</color>
+    <color name="bubbleAssistant">#2A2A35</color>
+</resources>

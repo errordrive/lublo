@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Lublo" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primaryDark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/accentDark</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Glassmorphism card -->
+    <style name="GlassCard" parent="android:Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/glass</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="strokeColor">@color/glassBorder</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Animated ripple button -->
+    <style name="LubloButton" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="android:elevation">6dp</item>
+        <item name="android:translationZ">6dp</item>
+        <item name="cornerRadius">18dp</item>
+    </style>
+
+    <!-- Floating action button -->
+    <style name="LubloFAB" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="android:translationZ">8dp</item>
+        <item name="elevation">8dp</item>
+        <item name="backgroundTint">@color/primary</item>
+    </style>
+
+    <!-- Animated bubble (Jervis-like) -->
+    <style name="Bubble" parent="android:Widget">
+        <item name="android:background">@drawable/bubble_bg</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <!-- Loading / typing indicator -->
+    <style name="Typing">
+        <item name="android:layout_width">8dp</item>
+        <item name="android:layout_height">8dp</item>
+        <item name="android:background">@drawable/typing_dot</item>
+    </style>
+</resources>
