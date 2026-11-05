@@ -2,6 +2,7 @@ package com.lublo.agent.plugins
 
 import com.lublo.agent.AgentService
 import com.lublo.agent.Bus
+import org.json.JSONObject
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -87,10 +88,10 @@ class PluginEngine(private val svc: AgentService) {
         if (ctx.checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return "call permission denied"
         }
-        try {
+        return try {
             val uri = android.net.Uri.parse("tel:$number")
             svc.startActivity(Intent(Intent.ACTION_CALL, uri).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            return "calling $number"
+            "calling $number"
         } catch (e: Exception) { "call failed: ${e.message}" }
     }
 
@@ -99,7 +100,7 @@ class PluginEngine(private val svc: AgentService) {
         if (ctx.checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             return "sms permission denied"
         }
-        try {
+        return try {
             val def = Telephony.Sms.getDefaultSmsPackage(ctx)
             val i = Intent(Intent.ACTION_SENDTO).apply {
                 data = android.net.Uri.parse("smsto:$number")
@@ -107,7 +108,7 @@ class PluginEngine(private val svc: AgentService) {
                 if (def != null) setPackage(def)
             }
             svc.startActivity(Intent.createChooser(i, "Send message"))
-            return "sms intent opened for $number"
+            "sms intent opened for $number"
         } catch (e: Exception) { "sms failed: ${e.message}" }
     }
 
@@ -115,7 +116,7 @@ class PluginEngine(private val svc: AgentService) {
         if (ctx.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             return "contacts permission denied"
         }
-        try {
+        return try {
             val cursor = ctx.contentResolver.query(
                 android.provider.ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 arrayOf(android.provider.ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -133,7 +134,7 @@ class PluginEngine(private val svc: AgentService) {
                     } while (c.moveToNext())
                 }
             }
-            return if (sb.isEmpty()) "no contact named '$name'" else sb.toString().trimEnd()
+            if (sb.isEmpty()) "no contact named '$name'" else sb.toString().trimEnd()
         } catch (e: Exception) { "contact lookup failed: ${e.message}" }
     }
 
@@ -141,14 +142,15 @@ class PluginEngine(private val svc: AgentService) {
         if (ctx.checkSelfPermission(Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             return "contacts permission denied"
         }
-        try {
-            val ops = android.content.ContentProviderOperation.newInsert(
+        return try {
+            val builder = android.content.ContentProviderOperation.newInsert(
                 android.provider.ContactsContract.RawContacts.CONTENT_URI
-            ).build()
-            ops.withValue(android.provider.ContactsContract.RawContacts.ACCOUNT_NAME, null)
-            ops.withValue(android.provider.ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+            )
+            builder.withValue(android.provider.ContactsContract.RawContacts.ACCOUNT_NAME, null)
+            builder.withValue(android.provider.ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+            val ops = builder.build()
             svc.contentResolver.applyBatch(android.provider.ContactsContract.AUTHORITY, arrayListOf(ops))
-            return "contact added: $name"
+            "contact added: $name"
         } catch (e: Exception) { "contact add failed: ${e.message}" }
     }
 
@@ -166,9 +168,9 @@ class PluginEngine(private val svc: AgentService) {
                 action = Intent.ACTION_VIEW
                 putExtra("TERMUX_EXEC_COMMAND", safe)
             }
-            try {
+            return try {
                 svc.startActivity(Intent.createChooser(intent, "Run in Termux"))
-                return "opened Termux with: $q (run it manually)"
+                "opened Termux with: $q (run it manually)"
             } catch (e: Exception) { "termux launch failed: ${e.message}" }
         }
         return "termux not installed; shell commands are limited. Install Termux to enable 'shell' plugin fully."

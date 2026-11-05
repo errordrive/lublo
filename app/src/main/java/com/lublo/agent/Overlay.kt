@@ -63,8 +63,8 @@ class Overlay(private val svc: AgentService) {
         }
         layoutParams = LinearLayout.LayoutParams(dp(56), dp(56)).apply {
             setMargins(dp(4), dp(4), dp(4), dp(8))
-            elevation = dp(6)
         }
+        elevation = dp(6).toFloat()
         setOnClickListener { svc.toggleVoice() }
         setOnTouchListener(animateClick(this))
     }

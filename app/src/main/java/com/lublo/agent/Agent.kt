@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.os.Build
 import android.os.Bundle
 import android.view.accessibility.AccessibilityNodeInfo
+import com.lublo.agent.plugins.PluginEngine
 import org.json.JSONObject
 
 /** The observe -> think -> act loop. Runs on its own thread. */
@@ -65,9 +66,7 @@ Rules:
 - Never read or type passwords. If login, captcha or payment is needed, use ask or finish.
 - Reply and speak in the user's language. Call finish as soon as the task is done.
 - Context matters: remember the user's task across turns; break big tasks into steps.
-- Be friendly and concise — you are a helpful assistant.
-
-Screen size: ${dm.widthPixels}x${dm.heightPixels}px."""
+- Be friendly and concise — you are a helpful assistant."""
     }
 
     fun start(task: String) {
@@ -154,7 +153,7 @@ Screen size: ${dm.widthPixels}x${dm.heightPixels}px."""
             // Plugin/tool action (open_app with name arg, dial, shell, read, status, etc.)
             if (act == "open_app" && a.has("name")) {
                 svc.status(a.optString("thought").ifBlank { "opening ${a.optString("name")}" })
-                val result = pluginEngine?.run(act, a) ?: "unknown plugin"
+                val result = pluginEngine.run(act, a)
                 history.add("$step. open_app -> $result")
                 Thread.sleep(900)
                 continue

@@ -1,5 +1,7 @@
 package com.lublo.agent
 
+import android.os.Handler
+import android.os.Looper
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -24,7 +26,7 @@ object LlmClient {
             put("max_tokens", 800)
             put("messages", messages)
         }
-        return call(url, body.toString())
+        return call(url, body.toString(), key)
     }
 
     /** Chat with function calling — returns the full assistant message (may include tool_calls). */
@@ -43,7 +45,7 @@ object LlmClient {
             if (tools != null) put("tools", tools)
             put("tool_choice", "auto")
         }
-        return call(URL(base.trimEnd('/') + "/chat/completions"), body.toString())
+        return call(URL(base.trimEnd('/') + "/chat/completions"), body.toString(), key)
     }
 
     /** Stream a chat response. The callback receives each chunk as it arrives. */
@@ -123,10 +125,10 @@ object LlmClient {
                 put("temperature", 0.0)
                 put("max_tokens", 800)
                 put("messages", history)
-            }.toString())
+            }.toString(), key)
     }
 
-    private fun call(url: URL, body: String): String {
+    private fun call(url: URL, body: String, key: String): String {
         val c = url.openConnection() as HttpURLConnection
         try {
             c.requestMethod = "POST"
@@ -151,4 +153,4 @@ object LlmClient {
 }
 
 private val executor = java.util.concurrent.Executors.newSingleThreadExecutor()
-private val main = android.os.Handler(Looper.getMainLooper())
+private val main = Handler(Looper.getMainLooper())

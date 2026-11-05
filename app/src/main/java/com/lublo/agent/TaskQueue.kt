@@ -28,7 +28,7 @@ class TaskQueue(private val svc: AgentService) {
     }
 
     fun isEmpty(): Boolean = queue.isEmpty()
-    fun size(): Int = queue.size()
+    fun size(): Int = queue.size
 
     fun shutdown() {
         worker.interrupt()

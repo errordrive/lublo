@@ -29,10 +29,10 @@ class MainActivity : android.app.Activity() {
     private val main = Handler(Looper.getMainLooper())
     private var scrollView: CustomScrollView? = null
     private var messages: LinearLayout? = null
-    private lateinit var inputArea: View
+    private lateinit var inputArea: LinearLayout
     private lateinit var taskInput: EditText
-    private lateinit var sendBtn: Button
-    private lateinit var micBtn: Button
+    private lateinit var sendBtn: TextView
+    private lateinit var micBtn: TextView
     private lateinit var status: TextView
     private var isListening = false
 
@@ -64,7 +64,7 @@ class MainActivity : android.app.Activity() {
 
         // Chat messages area
         scrollView = CustomScrollView(this).apply {
-            overScrollMode = OVER_SCROLL_NEVER
+            overScrollMode = View.OVER_SCROLL_NEVER
             addView(buildMessages())
         }
         messages = scrollView?.getChildAt(0) as? LinearLayout
@@ -87,15 +87,15 @@ class MainActivity : android.app.Activity() {
             orientation = LinearLayout.HORIZONTAL
             setBackgroundColor(getColorRes(R.color.surface))
             setPadding(dp(12), dp(10), dp(12), dp(10))
-            elevation = dp(8)
+            elevation = dp(8).toFloat()
         }
 
         taskInput = EditText(this).apply {
-            hintText = "Ask Lublo anything... (e.g. 'Open YouTube and search Lo-fi music')"
+            hint = "Ask Lublo anything... (e.g. 'Open YouTube and search Lo-fi music')"
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             setTextColor(getColorRes(R.color.textPrimary))
             setHintTextColor(getColorRes(R.color.textMuted))
-            setBackgroundColor(getColorRes(0xFF252530))
+            setBackgroundColor(0xFF252530.toInt())
             setPadding(dp(16), dp(12), dp(12), dp(12))
             setSingleLine(false)
             maxLines = 4
@@ -202,14 +202,14 @@ class MainActivity : android.app.Activity() {
             setPadding(dp(16), dp(16), dp(16), dp(8))
         }
         // Welcome message
-        addView(createBubble("Hello! I'm Lublo. \uD83D\uDC4B", false))
-        addView(createBubble("I can control your phone, open apps, search the web, make calls, and help with daily tasks. Try: 'Open YouTube and search Lo-fi beats' or 'What's the weather?'", false))
+        messages?.addView(createBubble("Hello! I'm Lublo. \uD83D\uDC4B", false))
+        messages?.addView(createBubble("I can control your phone, open apps, search the web, make calls, and help with daily tasks. Try: 'Open YouTube and search Lo-fi beats' or 'What's the weather?'", false))
         return messages!!
     }
 
-    private fun createBubble(text: String, isUser: Boolean): View {
+    private fun createBubble(msg: String, isUser: Boolean): View {
         val bubble = TextView(this).apply {
-            text = text
+            text = msg
             textSize = 14.5f
             setTextColor(if (isUser) getColorRes(R.color.white) else getColorRes(R.color.textPrimary))
             setPadding(dp(16), dp(14), dp(16), dp(14))
@@ -252,9 +252,9 @@ class MainActivity : android.app.Activity() {
             textSize = 22f
             setTextColor(getColorRes(R.color.white))
             gravity = Gravity.CENTER
-            background = getDrawable(R.drawable.rounded_button, theme)
+            background = resources.getDrawable(R.drawable.rounded_button, theme)
             layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
-            elevation = dp(4)
+            elevation = dp(4).toFloat()
         }
     }
 
@@ -334,8 +334,5 @@ class CustomScrollView @kotlin.jvm.JvmOverloads constructor(
         }
     }
 
-    fun smoothScrollTo(x: Int, y: Int) {
-        scroller.startScroll(0, scroller.currY, 0, y.coerceAtMost(maxScroll) - scroller.currY, 500)
-        invalidate()
-    }
+    // Note: ScrollView.smoothScrollTo is final, so callers use the built-in one.
 }

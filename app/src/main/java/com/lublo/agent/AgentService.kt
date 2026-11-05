@@ -110,7 +110,7 @@ class AgentService : AccessibilityService() {
             return
         }
         taskQueue.enqueue {
-            svc.status("Background task: $task")
+            status("Background task: $task")
             agent.start(task)
         }
         main.post { status("Working in the background...") }

@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
 object ApiPlugin {
     private val executor: ExecutorService = Executors.newCachedThreadPool()
 
-    interface Callback { fun onResult(plugin: String, result: String) }
+    fun interface Callback { fun onResult(plugin: String, result: String) }
 
     /** Dispatch async. Callers must handle the callback. */
     fun execute(plugin: String, url: String, method: String = "GET", json: String? = null, cb: Callback) {
@@ -38,7 +38,7 @@ object ApiPlugin {
         c.doOutput = body != null
         c.setRequestProperty("Content-Type", "application/json")
         c.setRequestProperty("User-Agent", "Mozilla/5.0 (Lublo Agent)")
-        body?.let { c.outputStream.use { it.write(it.toByteArray(Charsets.UTF_8)) } }
+        body?.let { b -> c.outputStream.use { out -> out.write(b.toByteArray(Charsets.UTF_8)) } }
         val stream = if (c.responseCode in 200..299) c.inputStream else c.errorStream
         val text = stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
         if (c.responseCode !in 200..299) throw IOException("HTTP ${c.responseCode}: ${text.take(200)}")
@@ -52,26 +52,25 @@ object ApiPlugin {
         execute("weather", url) { _, raw ->
             try {
                 val j = JSONObject(raw)
-                val cur = j.getJSONObject("current_condition").getJSONObject(0)
-                val w = j.getJSONObject("weather").getJSONObject(0)
+                val cur = j.getJSONArray("current_condition").getJSONObject(0)
+                val w = j.getJSONArray("weather").getJSONObject(0)
                 val t = cur.optString("temp_C")
                 val feels = cur.optString("FeelsLikeC")
-                val d = cur.optString("weatherDesc").getJSONObject(0).optString("value")
+                val d = cur.getJSONArray("weatherDesc").getJSONObject(0).optString("value")
                 val hu = cur.optString("humidity")
                 val ws = cur.optString("windspeedKmph")
-                cb.onResult("weather", "Weather in $city: $t°C (feels like $feels°C), $d, humidity ${hu}%, wind ${ws} km/h. Today: ${w.getString("dayMaxTempC")}/°C")
+                cb.onResult("weather", "Weather in $city: $t°C (feels like $feels°C), $d, humidity ${hu}%, wind ${ws} km/h. Today max: ${w.optString("maxtempC")}°C")
             } catch (e: Exception) {
                 cb.onResult("weather", "weather: could not parse (${e.message})")
             }
         }
     }
 
-    /** News (newsapi.org free tier — add key to Prefs; defaults to demo data). */
-    private const val NEWS_API_KEY = "free" // set via Prefs for real usage
+    /** News (newsapi.org free tier — set NEWS_API_KEY for real usage). */
+    private const val NEWS_API_KEY = "free" // set a real NewsAPI key here for live news
     fun news(topic: String, cb: Callback) {
-        val key = Prefs.newsApiKey(null)
         val q = URLEncoder.encode(topic, "UTF-8")
-        if (key == "free") {
+        if (NEWS_API_KEY == "free") {
             cb.onResult("news", "news: free tier limited — set a NewsAPI key in settings for live news. Try 'https://newsapi.org/v2/everything?q=$q&language=en'.")
             return
         }
@@ -100,9 +99,9 @@ object ApiPlugin {
             try {
                 val j = JSONObject(raw)
                 val n = j.optString("name")
-                val d = j.optString("description", "")?.split("\n")?.get(0)?.take(120) ?: ""
-                val priceUsd = j.getJSONObject("market_data").optJSONObject("current_price")?.optDouble("usd") ?: 0.0
-                val chg = j.getJSONObject("market_data").optJSONObject("price_change_percentage_24h")?.optDouble("usd") ?: 0.0
+                val market = j.getJSONObject("market_data")
+                val priceUsd = market.optJSONObject("current_price")?.optDouble("usd") ?: 0.0
+                val chg = market.optDouble("price_change_percentage_24h", 0.0)
                 cb.onResult("crypto", "$n ($s): $priceUsd USD, 24h ${chg}%")
             } catch (e: Exception) {
                 cb.onResult("crypto", "crypto error: ${e.message}")
@@ -156,9 +155,4 @@ object ApiPlugin {
             }
         }
     }
-}
-
-// Dummy storage when context is null (safe default)
-internal object Prefs {
-    fun newsApiKey(ctx: android.content.Context?): String = ""
 }
