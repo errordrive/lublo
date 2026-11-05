@@ -117,6 +117,30 @@ class MainActivity : android.app.Activity() {
         root.addView(inputArea, LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, dp(72)))
 
+        // Settings row: natural voice toggle (free human-like TTS)
+        val settingsRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setBackgroundColor(getColorRes(R.color.surface))
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+        val voiceLabel = TextView(this).apply {
+            text = "🔊 Natural voice (free TTS)"
+            textSize = 14f
+            setTextColor(getColorRes(R.color.textPrimary))
+        }
+        val voiceSwitch = buildSwitch()
+        settingsRow.addView(voiceLabel, LinearLayout.LayoutParams(0, dp(40), 1f))
+        settingsRow.addView(voiceSwitch, LinearLayout.LayoutParams(dp(48), dp(28)))
+        voiceSwitch.setOnClickListener {
+            val now = !Prefs.useFreeTts(this)
+            Prefs.setUseFreeTts(this, now)
+            VoiceTts.useCloudTts = now
+            addMessage(if (now) "Natural voice ON — using free cloud TTS" else "Natural voice OFF — using device TTS", false)
+        }
+        root.addView(settingsRow, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
+
         refresh()
         return root
     }
@@ -209,6 +233,17 @@ class MainActivity : android.app.Activity() {
 
     private fun getColorRes(id: Int): Int {
         return resources.getColor(id, theme)
+    }
+
+    private fun buildSwitch(): View {
+        val switch = TextView(this).apply {
+            text = "\uD83D\uDD18" // Toggle emoji
+            textSize = 28f
+            setTextColor(getColorRes(R.color.primary))
+            gravity = Gravity.CENTER
+            setPadding(dp(8), dp(2), dp(8), dp(2))
+        }
+        return switch
     }
 
     private fun buildCircleBtn(label: String, color: Int): TextView {
