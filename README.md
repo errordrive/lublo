@@ -8,9 +8,10 @@ helps you with daily tasks. Modern animated UI (Jervis-style AI bubble) with liv
 - 🎙️ **Voice-first**: tap mic, floating bubble, or **Volume Up + Down** to talk from any app
 - 🤖 **Autonomous agent**: sees your screen via Accessibility API, thinks, acts, and reports
 - 🌐 **Web & free APIs**: weather, news, crypto, wiki, time, web page fetching — all free
-- 🔌 **Plugins**: dial calls, SMS, contacts, Termux shell, file读写, wallpaper, theme, clipboard
+- 🔌 **Plugins**: dial calls, SMS, contacts, Termux shell, file read/write, wallpaper, theme, clipboard
 - 🚀 **App control**: open apps, install from Play Store, automate Chrome/YouTube/WhatsApp
 - 🎨 **Animated UI**: glassmorphism, bubble pulse, typing indicators, smooth chat
+- 🔊 **Natural voice**: toggle "Natural voice (free TTS)" for human-like speech via free cloud TTS (fallback to device TTS)
 - 🛡️ **Safety**: confirmations on risky actions (calls, sends, deletes), step caps, stop anytime
 - 🔋 **Background tasks**: queue tasks that run while you keep talking
 - 🧠 **Context aware**: remembers your task across turns, breaks big jobs into steps
