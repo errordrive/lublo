@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Lublo</string>
+    <string name="a11y_desc">Lets the Lublo agent read the screen and tap, type and scroll on your behalf when you give it a task.</string>
+</resources>
