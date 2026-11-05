@@ -43,7 +43,8 @@ android {
     lint { abortOnError = false }
 }
 
-// Zero third-party dependencies on purpose: smallest possible APK.
-// We intentionally do NOT use a TTS library — Android's built-in TextToSpeech
-// is used everywhere so the APK stays ~1MB and dependency-free.
-dependencies {}
+// Minimal Material Components for the modern UI. This is the smallest addition
+// needed for glassmorphism cards, FAB, and Material3-style styling.
+dependencies {
+    implementation("com.google.android.material:material:1.12.0")
+}
