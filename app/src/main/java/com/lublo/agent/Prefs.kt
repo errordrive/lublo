@@ -21,7 +21,14 @@ object Prefs {
             .putString("key", key.trim())
             .putString("lang", lang)
             .putInt("steps", steps.coerceIn(3, 60))
+            .putBoolean("use_free_tts", false)
             .apply()
+    }
+
+    fun useFreeTts(c: Context): Boolean = sp(c).getBoolean("use_free_tts", false)
+
+    fun setUseFreeTts(c: Context, use: Boolean) {
+        sp(c).edit().putBoolean("use_free_tts", use).apply()
     }
 }
 
