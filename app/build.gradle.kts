@@ -44,7 +44,6 @@ android {
 }
 
 // Zero third-party dependencies on purpose: smallest possible APK.
-// Play Services (optional, for better TTS quality) — commented by default to keep size tiny.
-dependencies {
-    implementation("com.google.android.gms:play-services-tts:2.0.9")
-}
+// We intentionally do NOT use a TTS library — Android's built-in TextToSpeech
+// is used everywhere so the APK stays ~1MB and dependency-free.
+dependencies {}
